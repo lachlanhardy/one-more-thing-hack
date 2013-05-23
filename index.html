@@ -28,32 +28,279 @@
         </ul>
       </header>
       <section>
-        <h3>Welcome to GitHub Pages.</h3>
+        <h1>Windows Azure Mobile Services</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<h3>The Challenge</h3>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>Yes, it's iOS on Windows Azure.</p>
+
+<p>In this challenge, you will use Windows Azure Mobile Services to build a connected and sclable iOS app in Objective-C.  </p>
+
+<p>You'll go to the Windows Azure portal, create a new Mobile Service and SQL database.  Then, you'll download the sample ToDo list app and have some fun storing data in the cloud, configuring Facebook authentication, and sending push notifications.</p>
+
+<p>The walkthrough below should help you with the challenge, but you can also get in touch with <a href="https://github.com/lachlanhardy" class="user-mention">@lachlanhardy</a> or <a href="https://github.com/esthermosad" class="user-mention">@esthermosad</a> with any questions-- they're on site and happy to help!</p>
+
+<h4>Bonus Challenge</h4>
+
+<p>For bonus points--add a service from the Windows Azure Store to your app.</p>
+
+<h3>Validation…and Prizes!</h3>
+
+<p>You can get these challenges validated by Lachlan until the end of the conference or send over a screenshot of your completed app to <a href="mailto:lachlanh@microsoft.com">lachlanh@microsoft.com</a> by EOD on 5/26/2013 to be entered into a drawing for a Jawbone Big Jambox. </p>
+
+<p>You'll receive one entry for completing the challenge; two if you also complete the bonus challenge.</p>
+
+<h3>Challenge Walkthrough</h3>
+
+<h4>Data</h4>
+
+<ul>
+<li><p>Login to your Windows Azure account at manage.windowsazure.com.  (If you don't have a Windows Azure account, you can obtain a free 90-day trial at <a href="http://www.windowsazure.com/en-us/pricing/free-trial/.">http://www.windowsazure.com/en-us/pricing/free-trial/.</a>)</p></li>
+<li><p>Click New --&gt; Compute --&gt; Mobile Service --&gt; Create.  Then specify URL and database login/password order to create a new Mobile Service and the associated SQL database.</p></li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-create.png" alt="image"></p>
+
+<ul>
+<li>Select your new mobile service, choose iOS, and click 'Create a New iOS app.'</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-portal-quickstart-ios.png" alt="image"></p>
+
+<ul>
+<li>Click 'Create ToDoItem Table' and Download the sample app.  This will automatically create a table called 'ToDoItem' in your app's SQL database and connect your sample app to that table.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-quickstart-steps-ios.png" alt="image"></p>
+
+<ul>
+<li>Open the sample app in Xcode and run the app.  In the simulator, you'll be able to add items to the Todo list.  Add a few items like 'Take Notes on Lex's Friedman's OMT session,' 'Make dinner plans for WWDC' and 'Pick up some Tim Tams.' When you hit the (+) button, you're sending a POST your app's Mobile Services backend hosted in Windows Azure.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-entered-items.png" alt="image"></p>
+
+<ul>
+<li>If you head back to the <a href="manage.windowsazure.com">Windows Azure Portal</a>, you'll see that items that you added to the list are now stored in the TodoItem table in your SQL database.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-items-added.png" alt="image"></p>
+
+<ul>
+<li>When you drill down into the table, you'll see the items you entered in a table with three columns.  Next, we're going to click the script tabe and copy in the following code snippet into the 'Insert' operation to see how dynamic schemas work in Mobile Services.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-script-drilldown.png" alt="image"></p>
+
+<p>Scripts are how you add some custom logic to your app, connect to other Windows Azure services, or work with third party APIs.  With Mobile Services, all your server scripts need to be written in JavaScript.</p>
+
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">insert</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="nx">item</span><span class="p">.</span><span class="nx">created</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+
+    <span class="nx">request</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+
+<span class="p">}</span>
+</pre></div>
+
+<ul>
+<li>Head back to the simulator and add another item--like 'Testing Dynamic Schema' and hit the (+) button.  Now, if you refresh the table in the Windows Azure portal, you will see a fourth column added that details when the item was created.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-date-created.png" alt="image"></p>
+
+<ul>
+<li>Enabling dynamic schema is great when you want to create the schema for your table but you don't want to let all your users alter it in production.  To turn off dynamic schema, head to the configure tab and select 'OFF' for dynamic schema.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-dynamic-schema-off.png" alt="image"></p>
+
+<ul>
+<li>Here, we've walked through using a SQL database with your Mobile Service, but some apps need to store binary or unstructured data. Using scripts, you could easily connect to Windows Azure Blob or Table Storage (as well as many other third party data options).</li>
+</ul><h4>User Authentication</h4>
+
+<ul>
+<li><p>The next step is to get set up with Facebook authentication and limit access to authenticated users.  </p></li>
+<li><p>In the Management Portal, click the Data tab, and then click the TodoItem table.</p></li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-portal-data-tables.png" alt="image"></p>
+
+<ul>
+<li>Click the Permissions tab, set all permissions to Only authenticated users, and then click Save. This will ensure that all operations against the TodoItem table require an authenticated user. This also simplifies the scripts in the next tutorial because they will not have to allow for the possibility of anonymous users.</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-portal-change-table-perms.png" alt="image"></p>
+
+<ul>
+<li><p>Follow the steps on <a href="http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/">this page</a> to register your app for Facebook authentication with Mobile Services.</p></li>
+<li><p>Copy over your App Key and Secret from Facebook into the appropriate slots in the 'IDENTITY' tab. Hit save.</p></li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-facebook-auth.png" alt="image"></p>
+
+<ul>
+<li>Back in Xcode, open the project file QSTodoListViewController.m and in the viewDidLoad method, remove the following code that reloads the data into the table:</li>
+</ul><pre><code>[self refresh];
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<ul>
+<li>Right after the viewDidLoad method, add the following:</li>
+</ul><pre><code>- (void)viewDidAppear:(BOOL)animated
+{
+    MSClient *client = self.todoService.client;
 
-<h3>Designer Templates</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+if (client.currentUser != nil) {
+    return;
+}
 
-<h3>Rather Drive Stick?</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+[client loginWithProvider:@"facebook" controller:self animated:YES completion:^(MSUser *user, NSError *error) {
+    [self refresh];
+}];
 
-<h3>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+}
+</code></pre>
 
-<h3>Support or Contact</h3>
+<ul>
+<li>Press the Run button to build the project, start the app in the iPhone emulator, then login with Facebook.</li>
+</ul><h4>Push Notifications</h4>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ul>
+<li>To get started with push notifications, head to the 'PUSH' tab, upload your Apple Developer Certificate and hit 'Save.' (More details on getting an Apple Developer Certificate can be found <a href="http://www.windowsazure.com/en-us/develop/mobile/tutorials/get-started-with-push-ios/">here</a>.)</li>
+</ul><p><img src="https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-push-tab-ios.png" alt="image"></p>
+
+<p>Note that push notifications are not supported by the iOS simulator so you must deploy the application to a device.</p>
+
+<ul>
+<li>Once you have an Apple developer certificate, make sure Dynamic Schema is enabled so that you can add a column for device tokens.  After you've done that, open the QSAppDelegate.h file in Xcode and add the following property below the *window property:</li>
+</ul><pre><code>@property (strong, nonatomic) NSString *deviceToken;
+</code></pre>
+
+<ul>
+<li>In QSAppDelegate.m, replace the following handler method inside the implementation:</li>
+</ul><pre><code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:
+(NSDictionary *)launchOptions
+{
+    // Register for remote notifications
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+    UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    return YES;
+}
+</code></pre>
+
+<ul>
+<li>In QSAppDelegate.m, add the following handler method inside the implementation:</li>
+</ul><pre><code>// We are registered, so now store the device token (as a string) on the AppDelegate instance
+// taking care to remove the angle brackets first.
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:
+(NSData *)deviceToken {
+    NSCharacterSet *angleBrackets = [NSCharacterSet characterSetWithCharactersInString:@"&lt;&gt;"];
+    self.deviceToken = [[deviceToken description] stringByTrimmingCharactersInSet:angleBrackets];
+}
+</code></pre>
+
+<ul>
+<li>In QSAppDelegate.m, add the following handler method inside the implementation:</li>
+</ul><pre><code>// Handle any failure to register. In this case we set the deviceToken to an empty
+// string to prevent the insert from failing.
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:
+(NSError *)error {
+    NSLog(@"Failed to register for remote notifications: %@", error);
+    self.deviceToken = @"";
+}
+</code></pre>
+
+<ul>
+<li>In QSAppDelegate.m, add the following handler method inside the implementation:</li>
+</ul><pre><code>// Because toast alerts don't work when the app is running, the app handles them.
+// This uses the userInfo in the payload to display a UIAlertView.
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:
+(NSDictionary *)userInfo {
+    NSLog(@"%@", userInfo);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:
+    [userInfo objectForKey:@"inAppMessage"] delegate:nil cancelButtonTitle:
+    @"OK" otherButtonTitles:nil, nil];
+    [alert show];
+}
+</code></pre>
+
+<ul>
+<li>In QSTodoListViewController.m, import the QSAppDelegate.h file so that you can use the delegate to obtain the device token:</li>
+</ul><pre><code>#import "QSAppDelegate.h"
+</code></pre>
+
+<ul>
+<li>In QSTodoListViewController.m, modify the (IBAction)onAdd action by locating the following line:</li>
+</ul><pre><code>NSDictionary *item = @{ @"text" : itemText.text, @"complete" : @(NO) };
+</code></pre>
+
+<p>And then replace it with:</p>
+
+<pre><code>// Get a reference to the AppDelegate to easily retrieve the deviceToken
+QSAppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+
+
+NSDictionary *item = @{
+    @"text" : itemText.text,
+    @"complete" : @(NO),
+    // add the device token property to our todo item payload
+    @"deviceToken" : delegate.deviceToken
+};
+</code></pre>
+
+<p>This adds a reference to the QSAppDelegate to obtain the device token and then modifies the request payload to include that device token. You must add this code before to the call to the addItem method.</p>
+
+<ul>
+<li>Back in the management portal, click on the Data tab and then your TodoItem table.  Under the 'Insert' option on the Script tab, replace the prepopulated code with teh following:</li>
+</ul><div class="highlight"><pre><span class="kd">function</span> <span class="nx">insert</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">request</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+    <span class="c1">// Set timeout to delay the notification, to provide time for the </span>
+    <span class="c1">// app to be closed on the device to demonstrate toast notifications</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">push</span><span class="p">.</span><span class="nx">apns</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">deviceToken</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">alert</span><span class="o">:</span> <span class="s2">"Toast: "</span> <span class="o">+</span> <span class="nx">item</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+            <span class="nx">payload</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">inAppMessage</span><span class="o">:</span> <span class="s2">"Hey, a new item arrived: '"</span> <span class="o">+</span> <span class="nx">item</span><span class="p">.</span><span class="nx">text</span> <span class="o">+</span> <span class="s2">"'"</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">},</span> <span class="mi">2500</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>This registers a new insert script, which uses the apns object to send a push notification (the inserted text) to the device provided in the insert request.  This script delays sending the notification to give you time to close the app to receive a toast notification.</p>
+
+<h5>Bonus Challenge #1 Walkthrough</h5>
+
+<ul>
+<li><p>The Windows Azure Store contains services and data sets that can be useful in your app.</p></li>
+<li><p>Click New --&gt; Store --&gt; SendGrid (or the service of your choice) --&gt; Free.</p></li>
+<li><p>Select ChosenSendGridName from the Dashboard and then hit 'Connection Info' and copy that information to your Notepad.</p></li>
+<li><p>Navigate to your Mobile service then click 'DATA' --&gt; the 'ToDoItem' table --&gt; 'SCRIPT.'</p></li>
+<li><p>On the 'Insert' script, replace the Insert function with the below code in order to trigger an email each time a new item is inserted to the 'ToDoItem' table.</p></li>
+</ul><div class="highlight"><pre><span class="kd">var</span> <span class="nx">SendGrid</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'sendgrid'</span><span class="p">).</span><span class="nx">SendGrid</span><span class="p">;</span>
+
+
+<span class="kd">function</span> <span class="nx">insert</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span> <span class="p">{</span>    
+    <span class="nx">request</span><span class="p">.</span><span class="nx">execute</span><span class="p">({</span>
+        <span class="nx">success</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// After the record has been inserted, send the response immediately to the client</span>
+            <span class="nx">request</span><span class="p">.</span><span class="nx">respond</span><span class="p">();</span>
+            <span class="c1">// Send the email in the background</span>
+            <span class="nx">sendEmail</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+
+<span class="kd">function</span> <span class="nx">sendEmail</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">sendgrid</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SendGrid</span><span class="p">(</span><span class="s1">'**username**'</span><span class="p">,</span> <span class="s1">'**password**'</span><span class="p">);</span>       
+
+    <span class="nx">sendgrid</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+        <span class="nx">to</span><span class="o">:</span> <span class="s1">'**email-address**'</span><span class="p">,</span>
+        <span class="nx">from</span><span class="o">:</span> <span class="s1">'**from-address**'</span><span class="p">,</span>
+        <span class="nx">subject</span><span class="o">:</span> <span class="s1">'New to-do item'</span><span class="p">,</span>
+        <span class="nx">text</span><span class="o">:</span> <span class="s1">'A new to-do was added: '</span> <span class="o">+</span> <span class="nx">item</span><span class="p">.</span><span class="nx">text</span>
+    <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// If the email failed to send, log it as an error so we can investigate</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>Resources:</h3>
+
+<ul>
+<li>iOS Getting Started Content: <a href="http://www.windowsazure.com/iOS">www.windowsazure.com/iOS</a>
+</li>
+<li>Mobile Dev Center: <a href="http://www.windowsazure.com/mobile">www.windowsazure.com/mobile</a>
+</li>
+<li>Collection of helpful blog posts &amp; tutorials: aka.ms/CommonWAMS</li>
+<li>Forum: <a href="http://social.msdn.microsoft.com/Forums/en-US/azuremobile/threads">http://social.msdn.microsoft.com/Forums/en-US/azuremobile/threads</a>
+</li>
+<li>Feature Requests: mobileservices.uservoice.com</li>
+<li>Feedback: mobileservices (at) microsoft (dot) com</li>
+</ul>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/lachlanhardy">lachlanhardy</a></p>
