@@ -4,18 +4,18 @@
 
 Yes, it's iOS on Windows Azure.
 
-In this challenge, you will use Windows Azure Mobile Services to build a connected and sclable iOS app in Objective-C.  
+In this challenge, you will use Windows Azure Mobile Services to build a connected and scalable iOS app in Objective-C.
 
-You'll to the Windows Azure portal, create a new Mobile Service and SQL database.  Then, you'll download the sample ToDo list app and have some fun storing data in the cloud, configuring Facebook authentication, and sending push notifications.
+You'll go to the Windows Azure portal, create a new Mobile Service and SQL database.  Then, you'll download the sample ToDo list app and have some fun storing data in the cloud, configuring Facebook authentication, and sending push notifications.
 
-The walkthrough below should help you with the challenge, but you can also get in touch with @lachlanhardy with any questions--he's on site and happy to help!
+The walkthrough below should help you with the challenge, but you can also get in touch with @lachlanhardy or @esthermosad with any questions--they're on site and happy to help!
 
 ####Bonus Challenge
 For bonus points--add a service from the Windows Azure Store to your app.
 
 ###Validation…and Prizes!
 
-You can get these challenges validated by Lachlan until the end of the conference or send over a screenshot of your completed app to lachlanh@microsoft.com by EOD on 5/26/2013 to be entered into a drawing for a Jawbone Big Jambox. 
+You can get these challenges validated by Lachlan until the end of the conference or send over a screenshot of your completed app to lachlanh@microsoft.com by EOD on 5/26/2013 to be entered into a draw for a Jawbone Big Jambox.
 
 You'll receive one entry for completing the challenge; two if you also complete the bonus challenge.
 
@@ -25,7 +25,7 @@ You'll receive one entry for completing the challenge; two if you also complete 
 
 * Login to your Windows Azure account at manage.windowsazure.com.  (If you don't have a Windows Azure account, you can obtain a free 90-day trial at http://www.windowsazure.com/en-us/pricing/free-trial/.)
 
-* Click New --> Compute --> Mobile Service --> Create.  Then specify URL and database login/password order to create a new Mobile Service and the associated SQL database.
+* Click New --> Compute --> Mobile Service --> Create.  Then specify URL and database login/password in order to create a new Mobile Service and the associated SQL database.
 
 ![image](https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-create.png)
 
@@ -37,7 +37,7 @@ You'll receive one entry for completing the challenge; two if you also complete 
 
 ![image](https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-quickstart-steps-ios.png)
 
-* Open the sample app in Xcode and run the app.  In the simulator, you'll be able to add items to the Todo list.  Add a few items like 'Take Notes on Lex's Friedman's OMT session,' 'Make dinner plans for WWDC' and 'Pick up some Tim Tams.' When you hit the (+) button, you're sending a POST your app's Mobile Services backend hosted in Windows Azure.
+* Open the sample app in Xcode and run the app.  In the simulator, you'll be able to add items to the Todo list.  Add a few items like 'Take Notes on Lex's Friedman's OMT session,' 'Make dinner plans for WWDC' and 'Pick up some Tim Tams.' When you hit the (+) button, you're sending a POST to your app's Mobile Services backend hosted in Windows Azure.
 
 ![image](https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-entered-items.png)
 
@@ -45,7 +45,7 @@ You'll receive one entry for completing the challenge; two if you also complete 
 
 ![image](https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-items-added.png)
 
-* When you drill down into the table, you'll see the items you entered in a table with three columns.  Next, we're going to click the script tabe and copy in the following code snippet into the 'Insert' operation to see how dynamic schemas work in Mobile Services.
+* When you drill down into the table, you'll see the items you entered in a table with three columns.  Next, we're going to click the script tab and copy in the following code snippet into the 'Insert' operation to see how dynamic schemas work in Mobile Services.
 
 ![image](https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-script-drilldown.png)
 
@@ -73,7 +73,7 @@ function insert(item, user, request) {
 
 ####User Authentication
 
-* The next step is to get set up with Facebook authentication and limit access to authenticated users.  
+* The next step is to get set up with Facebook authentication and limit access to authenticated users.
 
 * In the Management Portal, click the Data tab, and then click the TodoItem table.
 
@@ -85,7 +85,7 @@ function insert(item, user, request) {
 
 * Follow the steps on [this page](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/) to register your app for Facebook authentication with Mobile Services.
 
-* Copy over your App Key and Secret from Facebook into the appropriate slots in the 'IDENTITY' tab. Hit save.
+* Copy over your App Key and Client Secret from Facebook into the appropriate slots in the 'IDENTITY' tab. Hit save.
 
 ![image](https://raw.github.com/lachlanhardy/one-more-thing-hack/master/mobile-facebook-auth.png)
 
@@ -207,14 +207,14 @@ NSDictionary *item = @{
     @"deviceToken" : delegate.deviceToken
 };
 ```
-This adds a reference to the QSAppDelegate to obtain the device token and then modifies the request payload to include that device token. You must add this code before to the call to the addItem method.
+This adds a reference to the QSAppDelegate to obtain the device token and then modifies the request payload to include that device token. You must add this code before the call to the addItem method.
 
-* Back in the management portal, click on the Data tab and then your TodoItem table.  Under the 'Insert' option on the Script tab, replace the prepopulated code with teh following:
+* Back in the management portal, click on the Data tab and then your TodoItem table.  Under the 'Insert' option on the Script tab, replace the prepopulated code with the following:
 
 ```js
 function insert(item, user, request) {
     request.execute();
-    // Set timeout to delay the notification, to provide time for the 
+    // Set timeout to delay the notification, to provide time for the
     // app to be closed on the device to demonstrate toast notifications
     setTimeout(function() {
         push.apns.send(item.deviceToken, {
@@ -245,7 +245,7 @@ This registers a new insert script, which uses the apns object to send a push no
 var SendGrid = require('sendgrid').SendGrid;
 
 
-function insert(item, user, request) {    
+function insert(item, user, request) {
     request.execute({
         success: function() {
             // After the record has been inserted, send the response immediately to the client
@@ -257,7 +257,7 @@ function insert(item, user, request) {
 
 
 function sendEmail(item) {
-    var sendgrid = new SendGrid('**username**', '**password**');       
+    var sendgrid = new SendGrid('**username**', '**password**');
 
     sendgrid.send({
         to: '**email-address**',
