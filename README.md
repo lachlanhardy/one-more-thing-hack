@@ -27,27 +27,27 @@ You'll receive one entry for completing the challenge; two if you also complete 
 
 * Click New --> Compute --> Mobile Service --> Create.  Then specify URL and database login/password order to create a new Mobile Service and the associated SQL database.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-create.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-create.png)
 
 * Select your new mobile service, choose iOS, and click 'Create a New iOS app.'
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-portal-quickstart-ios.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-portal-quickstart-ios.png)
 
 * Click 'Create ToDoItem Table' and Download the sample app.  This will automatically create a table called 'ToDoItem' in your app's SQL database and connect your sample app to that table.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-quickstart-steps-ios.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-quickstart-steps-ios.png)
 
 * Open the sample app in Xcode and run the app.  In the simulator, you'll be able to add items to the Todo list.  Add a few items like 'Take Notes on Lex's Friedman's OMT session,' 'Make dinner plans for WWDC' and 'Pick up some Tim Tams.' When you hit the (+) button, you're sending a POST your app's Mobile Services backend hosted in Windows Azure.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-entered-items.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-entered-items.png)
 
 * If you head back to the [Windows Azure Portal](manage.windowsazure.com), you'll see that items that you added to the list are now stored in the TodoItem table in your SQL database.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-items-added.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-items-added.png)
 
 * When you drill down into the table, you'll see the items you entered in a table with three columns.  Next, we're going to click the script tabe and copy in the following code snippet into the 'Insert' operation to see how dynamic schemas work in Mobile Services.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-script-drilldown.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-script-drilldown.png)
 
 Scripts are how you add some custom logic to your app, connect to other Windows Azure services, or work with third party APIs.  With Mobile Services, all your server scripts need to be written in JavaScript.
 
@@ -63,11 +63,11 @@ function insert(item, user, request) {
 
 * Head back to the simulator and add another item--like 'Testing Dynamic Schema' and hit the (+) button.  Now, if you refresh the table in the Windows Azure portal, you will see a fourth column added that details when the item was created.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-date-created.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-date-created.png)
 
 * Enabling dynamic schema is great when you want to create the schema for your table but you don't want to let all your users alter it in production.  To turn off dynamic schema, head to the configure tab and select 'OFF' for dynamic schema.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-dynamic-schema-off.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-dynamic-schema-off.png)
 
 * Here, we've walked through using a SQL database with your Mobile Service, but some apps need to store binary or unstructured data. Using scripts, you could easily connect to Windows Azure Blob or Table Storage (as well as many other third party data options).
 
@@ -77,17 +77,17 @@ function insert(item, user, request) {
 
 * In the Management Portal, click the Data tab, and then click the TodoItem table.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-portal-data-tables.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-portal-data-tables.png)
 
 * Click the Permissions tab, set all permissions to Only authenticated users, and then click Save. This will ensure that all operations against the TodoItem table require an authenticated user. This also simplifies the scripts in the next tutorial because they will not have to allow for the possibility of anonymous users.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-portal-change-table-perms.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-portal-change-table-perms.png)
 
 * Follow the steps on [this page](http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/) to register your app for Facebook authentication with Mobile Services.
 
 * Copy over your App Key and Secret from Facebook into the appropriate slots in the 'IDENTITY' tab. Hit save.
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-facebook-auth.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-facebook-auth.png)
 
 * Back in Xcode, open the project file QSTodoListViewController.m and in the viewDidLoad method, remove the following code that reloads the data into the table:
 
@@ -122,7 +122,7 @@ if (client.currentUser != nil) {
 
 * To get started with push notifications, head to the 'PUSH' tab, upload your Apple Developer Certificate and hit 'Save.' (More details on getting an Apple Developer Certificate can be found [here](http://www.windowsazure.com/en-us/develop/mobile/tutorials/get-started-with-push-ios/).)
 
-![image](https://github.com/lachlanhardy/one-more-thing-hack/mobile-push-tab-ios.png)
+![image](https://github.com/lachlanhardy/one-more-thing-hack/blob/master/mobile-push-tab-ios.png)
 
 Note that push notifications are not supported by the iOS simulator so you must deploy the application to a device.
 
